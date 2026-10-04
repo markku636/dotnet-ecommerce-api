@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.8.12" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EC226.MemberSite.IRepository\EC226.MemberSite.IRepository.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.IServices\EC226.MemberSite.IServices.csproj" />
+    <ProjectReference Include="..\EC226.Loging\EC226.Loging.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.Repository\EC226.MemberSite.Repository.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.Services\EC226.MemberSite.Services.csproj" />
+    <ProjectReference Include="..\EC226.Utility\EC226.Utility.csproj" />
+  </ItemGroup>
+</Project>

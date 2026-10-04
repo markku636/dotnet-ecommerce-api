@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
+    <PackageReference Include="NLog" Version="5.1.2" />
+    <PackageReference Include="Npgsql" Version="10.0.1" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.153" />
+  </ItemGroup>
+
+</Project>

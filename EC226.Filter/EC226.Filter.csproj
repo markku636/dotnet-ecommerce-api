@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
+    <PackageReference Include="Npgsql" Version="10.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EC226.Loging\EC226.Loging.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.Model\EC226.MemberSite.Model.csproj" />
+  </ItemGroup>
+</Project>

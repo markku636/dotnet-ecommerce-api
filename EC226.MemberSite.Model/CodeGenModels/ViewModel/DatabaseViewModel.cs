@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace EC226.MemberSite.Model.CodeGenModels 
+{
+    public class DatabaseViewModel : PageViewModel,IView
+    {
+        [PropertyName("编号")]
+        public int? Id { get; set; }
+        [PropertyName("备注")]
+        [ValidateReduired()]
+        public string Desc { get; set; }
+        [PropertyName("连接字符串")]
+        [ValidateReduired()]
+        public string Connection { get; set; }
+        [PropertyName("数据库类型")]
+        [ValidateReduired()]
+        public string DbType { get; set; }
+        [PropertyName("更新时间")]
+        public DateTime ChangeTime { get; set; }
+    }
+    public class DatabaseGridViewModel  
+    {
+        [DisplayName("编号")]
+        public int Id { get; set; }
+        [DisplayName("备注")]
+        public string Desc { get; set; }
+        [DisplayName("连接字符串")]
+        public string Connection { get; set; }
+        [DisplayName("数据库类型")]
+        public string DbType { get; set; }
+        [DisplayName("有效连接")]
+        public bool IsConnection { get; set; }
+        [DisplayName("库已经创建")]
+        public bool IsExist { get; set; }
+        [DisplayName("更新时间")]
+        public DateTime ChangeTime { get; set; }
+    }
+}

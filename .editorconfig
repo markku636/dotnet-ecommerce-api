@@ -1,0 +1,709 @@
+# EditorConfig is awesome: https://EditorConfig.org
+# EC226 專案 - 程式碼風格與格式規範
+# EC226 Project - Code Style and Formatting Standards
+
+# 這是最頂層的 EditorConfig 檔案，編輯器會停止向上搜尋其他 .editorconfig 檔案
+# This is the top-most EditorConfig file
+root = true
+
+#### 全域設定 - 適用於所有檔案類型 ####
+#### Global Settings - Apply to all file types ####
+
+[*]
+# 字元編碼統一使用 UTF-8，支援國際字元（中文、日文等）
+# Character encoding set to UTF-8, supports international characters
+charset = utf-8
+
+# 檔案結尾自動插入空行（符合 POSIX 標準）
+# Automatically insert a newline at the end of file (POSIX standard)
+insert_final_newline = true
+
+# 自動移除行尾空白字元，避免版本控制產生不必要的差異
+# Automatically remove trailing whitespace at line ends
+trim_trailing_whitespace = true
+
+#### 程式碼檔案設定 ####
+#### Code Files Settings ####
+
+# C# 和 VB 程式碼檔案
+# C# and VB code files
+[*.{cs,csx,vb,vbx}]
+# 使用空格縮排（而非 Tab）
+# Use spaces for indentation (not tabs)
+indent_style = space
+
+# 縮排大小為 3 個空格（EC226 專案特定風格）
+# Indentation size is 3 spaces (EC226 project specific style)
+indent_size = 3
+
+# Windows 行尾字元 CRLF (\r\n)
+# Windows line ending CRLF (\r\n)
+end_of_line = crlf
+
+#### XML 專案檔設定 ####
+#### XML Project Files Settings ####
+
+# .csproj, .vbproj 等專案檔案
+# Project files like .csproj, .vbproj
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
+# XML 專案檔使用 2 空格縮排
+# XML project files use 2-space indentation
+indent_size = 2
+
+# XML 設定檔（props, config 等）
+# XML configuration files (props, config, etc.)
+[*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
+indent_size = 2
+
+#### 資料交換格式檔案設定 ####
+#### Data Exchange Format Files Settings ####
+
+# JSON 檔案使用 2 空格縮排
+# JSON files use 2-space indentation
+[*.json]
+indent_size = 2
+
+# YAML 檔案使用 2 空格縮排（YAML 對縮排敏感）
+# YAML files use 2-space indentation (YAML is indentation-sensitive)
+[*.{yml,yaml}]
+indent_size = 2
+
+#### Markdown 文件設定 ####
+#### Markdown Documents Settings ####
+
+[*.md]
+# Markdown 不移除行尾空白，因為行尾兩個空格代表強制換行
+# Do not trim trailing whitespace in Markdown (two spaces = line break)
+trim_trailing_whitespace = false
+
+#### Shell 腳本設定 ####
+#### Shell Scripts Settings ####
+
+[*.sh]
+# Shell 腳本使用 Unix 行尾字元 LF（跨平台相容）
+# Shell scripts use Unix line ending LF (cross-platform compatibility)
+end_of_line = lf
+
+#### Docker 設定 ####
+#### Docker Settings ####
+
+[Dockerfile]
+# Dockerfile 使用 2 空格縮排
+# Dockerfile uses 2-space indentation
+indent_size = 2
+
+################################################################################
+#### C# 專用設定 - 以下為 C# 程式碼的詳細格式規範 ####
+#### C# Specific Settings - Detailed formatting rules for C# code ####
+################################################################################
+
+[*.cs]
+
+#### 核心編輯器選項 ####
+#### Core EditorConfig Options ####
+
+# 縮排與空格設定
+# Indentation and spacing settings
+indent_size = 3
+indent_style = space
+tab_width = 3
+
+# 換行偏好設定
+# New line preferences
+end_of_line = crlf
+insert_final_newline = false
+
+################################################################################
+#### .NET 程式碼慣例 ####
+#### .NET Coding Conventions ####
+################################################################################
+
+#### Using 指令組織 ####
+#### Organize usings ####
+
+# 不將 using 指令分組
+# Do not separate import directive groups
+dotnet_separate_import_directive_groups = false
+
+# System.* 的 using 指令排在最前面
+# System.* using directives come first
+dotnet_sort_system_directives_first = true
+
+# 不使用檔案標頭範本
+# Do not use file header template
+file_header_template = unset
+
+#### this. 和 Me. 偏好設定 ####
+#### this. and Me. preferences ####
+
+# 不要求使用 this. 前綴（簡潔風格）
+# Do not require this. prefix (concise style)
+dotnet_style_qualification_for_event = false:silent
+dotnet_style_qualification_for_field = false:silent
+dotnet_style_qualification_for_method = false:silent
+dotnet_style_qualification_for_property = false:silent
+
+#### 語言關鍵字 vs BCL 類型偏好 ####
+#### Language keywords vs BCL types preferences ####
+
+# 偏好使用語言關鍵字（如 int 而非 Int32）
+# Prefer language keywords (e.g., int instead of Int32)
+dotnet_style_predefined_type_for_locals_parameters_members = true:silent
+dotnet_style_predefined_type_for_member_access = true:silent
+
+#### 括號偏好設定 ####
+#### Parentheses preferences ####
+
+# 算術運算子建議使用括號以提高清晰度
+# Suggest parentheses in arithmetic operators for clarity
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
+
+#### 修飾詞偏好設定 ####
+#### Modifier preferences ####
+
+# 非介面成員需要明確的存取修飾詞（public, private 等）
+# Require explicit accessibility modifiers for non-interface members
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
+
+#### 表達式層級偏好設定 ####
+#### Expression-level preferences ####
+
+# 偏好使用 ?? 運算子（null 合併運算子）
+# Prefer ?? operator (null-coalescing operator)
+dotnet_style_coalesce_expression = true:suggestion
+
+# 偏好使用集合初始化語法 { 1, 2, 3 }
+# Prefer collection initializer syntax { 1, 2, 3 }
+dotnet_style_collection_initializer = true:suggestion
+
+# 偏好使用明確的 Tuple 名稱
+# Prefer explicit tuple names
+dotnet_style_explicit_tuple_names = true:suggestion
+
+# 偏好使用 ?. 運算子（null 傳播運算子）
+# Prefer ?. operator (null-conditional operator)
+dotnet_style_null_propagation = true:suggestion
+
+# 偏好使用物件初始化語法 { Name = "test" }
+# Prefer object initializer syntax { Name = "test" }
+dotnet_style_object_initializer = true:suggestion
+
+# 運算子換行時放在行首
+# Operator placement when wrapping: beginning of line
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+
+# 偏好使用自動屬性而非含有私有支援欄位的屬性
+# Prefer auto-properties over properties with private backing fields
+dotnet_style_prefer_auto_properties = true:silent
+
+# 偏好使用複合指派運算子（如 x += 1）
+# Prefer compound assignment operators (e.g., x += 1)
+dotnet_style_prefer_compound_assignment = true:suggestion
+
+# 偏好三元運算子用於賦值
+# Prefer conditional expression over assignment
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent
+dotnet_style_prefer_conditional_expression_over_return = true:silent
+
+# 偏好推斷匿名型別成員名稱
+# Prefer inferred anonymous type member names
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+
+# 偏好使用 is null 檢查而非參考相等方法
+# Prefer is null check over reference equality method
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+
+# 偏好簡化的布林表達式
+# Prefer simplified boolean expressions
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+
+# 偏好簡化的字串插值
+# Prefer simplified string interpolation
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+
+#### 欄位偏好設定 ####
+#### Field preferences ####
+
+# 建議將欄位標記為 readonly（如果可能）
+# Suggest marking fields as readonly (if possible)
+dotnet_style_readonly_field = true:suggestion
+
+#### 參數偏好設定 ####
+#### Parameter preferences ####
+
+# 建議移除所有未使用的參數
+# Suggest removing all unused parameters
+dotnet_code_quality_unused_parameters = all:suggestion
+
+#### 隱藏偏好設定 ####
+#### Suppression preferences ####
+
+# 不移除任何隱藏排除項目
+# Do not remove any suppression exclusions
+dotnet_remove_unnecessary_suppression_exclusions = none
+
+################################################################################
+#### C# 程式碼慣例 ####
+#### C# Coding Conventions ####
+################################################################################
+
+#### var 偏好設定 ####
+#### var preferences ####
+
+# 其他情況下使用 var（類型明確時）
+# Use var elsewhere (when type is apparent)
+csharp_style_var_elsewhere = true:silent
+
+# 內建類型不使用 var（如明確寫 int 而非 var）
+# Do not use var for built-in types (e.g., explicit int instead of var)
+csharp_style_var_for_built_in_types = false:silent
+
+# 類型明顯時使用 var（如 var list = new List<int>()）
+# Use var when type is apparent (e.g., var list = new List<int>())
+csharp_style_var_when_type_is_apparent = true:silent
+
+#### 表達式主體成員 ####
+#### Expression-bodied members ####
+
+# 存取子可使用表達式主體 => 語法
+# Accessors can use expression body => syntax
+csharp_style_expression_bodied_accessors = true:silent
+
+# 建構子不使用表達式主體（使用傳統大括號）
+# Constructors do not use expression body (use traditional braces)
+csharp_style_expression_bodied_constructors = false:silent
+
+# 索引器可使用表達式主體
+# Indexers can use expression body
+csharp_style_expression_bodied_indexers = true:silent
+
+# Lambda 表達式可使用表達式主體
+# Lambda expressions can use expression body
+csharp_style_expression_bodied_lambdas = true:silent
+
+# 區域函式不使用表達式主體
+# Local functions do not use expression body
+csharp_style_expression_bodied_local_functions = false:silent
+
+# 方法不使用表達式主體（EC226 專案風格）
+# Methods do not use expression body (EC226 project style)
+csharp_style_expression_bodied_methods = false:silent
+
+# 運算子不使用表達式主體
+# Operators do not use expression body
+csharp_style_expression_bodied_operators = false:silent
+
+# 屬性可使用表達式主體（如 public int Age => _age;）
+# Properties can use expression body (e.g., public int Age => _age;)
+csharp_style_expression_bodied_properties = true:silent
+
+#### 模式比對偏好設定 ####
+#### Pattern matching preferences ####
+
+# 偏好模式比對而非 as 搭配 null 檢查
+# Prefer pattern matching over as with null check
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+
+# 偏好模式比對而非 is 搭配轉型檢查
+# Prefer pattern matching over is with cast check
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+
+# 偏好使用 not 模式（如 if (x is not null)）
+# Prefer not pattern (e.g., if (x is not null))
+csharp_style_prefer_not_pattern = true:suggestion
+
+# 偏好使用模式比對
+# Prefer pattern matching
+csharp_style_prefer_pattern_matching = true:silent
+
+# 偏好使用 switch 表達式
+# Prefer switch expression
+csharp_style_prefer_switch_expression = true:suggestion
+
+#### Null 檢查偏好設定 ####
+#### Null-checking preferences ####
+
+# 偏好條件委派呼叫（如 func?.Invoke()）
+# Prefer conditional delegate call (e.g., func?.Invoke())
+csharp_style_conditional_delegate_call = true:suggestion
+
+#### 修飾詞偏好設定 ####
+#### Modifier preferences ####
+
+# 偏好靜態區域函式
+# Prefer static local function
+csharp_prefer_static_local_function = true:suggestion
+
+# 修飾詞順序偏好（public, private, protected...）
+# Preferred modifier order (public, private, protected...)
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:silent
+
+#### 程式碼區塊偏好設定 ####
+#### Code-block preferences ####
+
+# 偏好使用大括號（即使是單行程式碼）
+# Prefer braces (even for single-line code)
+csharp_prefer_braces = true:silent
+
+# 偏好簡單的 using 陳述式（C# 8.0+ 語法）
+# Prefer simple using statement (C# 8.0+ syntax)
+csharp_prefer_simple_using_statement = true:suggestion
+
+#### 表達式層級偏好設定 ####
+#### Expression-level preferences ####
+
+# 偏好簡單的 default 表達式
+# Prefer simple default expression
+csharp_prefer_simple_default_expression = true:suggestion
+
+# 偏好解構變數宣告（如 var (x, y) = GetPoint();）
+# Prefer deconstructed variable declaration (e.g., var (x, y) = GetPoint();)
+csharp_style_deconstructed_variable_declaration = true:suggestion
+
+# 類型明顯時偏好隱式物件建立（如 Person p = new();）
+# Prefer implicit object creation when type is apparent (e.g., Person p = new();)
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+
+# 偏好內嵌變數宣告（如 if (int.TryParse(s, out var i))）
+# Prefer inlined variable declaration (e.g., if (int.TryParse(s, out var i)))
+csharp_style_inlined_variable_declaration = true:suggestion
+
+# 偏好模式區域變數而非匿名函式
+# Prefer pattern local over anonymous function
+csharp_style_pattern_local_over_anonymous_function = true:suggestion
+
+# 偏好使用索引運算子（如 arr[^1]）
+# Prefer index operator (e.g., arr[^1])
+csharp_style_prefer_index_operator = true:suggestion
+
+# 偏好 null 檢查而非類型檢查
+# Prefer null check over type check
+csharp_style_prefer_null_check_over_type_check = true:suggestion
+
+# 偏好使用範圍運算子（如 arr[1..5]）
+# Prefer range operator (e.g., arr[1..5])
+csharp_style_prefer_range_operator = true:suggestion
+
+# 偏好使用 throw 表達式
+# Prefer throw expression
+csharp_style_throw_expression = true:suggestion
+
+# 未使用的值賦值偏好使用捨棄變數
+# Prefer discard variable for unused value assignment
+csharp_style_unused_value_assignment_preference = discard_variable:suggestion
+csharp_style_unused_value_expression_statement_preference = discard_variable:silent
+
+#### using 指令偏好設定 ####
+#### 'using' directive preferences ####
+
+# using 指令放在命名空間外部
+# Place using directives outside namespace
+csharp_using_directive_placement = outside_namespace:silent
+
+################################################################################
+#### C# 格式化規則 ####
+#### C# Formatting Rules ####
+################################################################################
+
+#### 換行偏好設定 ####
+#### New line preferences ####
+
+# catch 前換行
+# New line before catch
+csharp_new_line_before_catch = true
+
+# else 前換行
+# New line before else
+csharp_new_line_before_else = true
+
+# finally 前換行
+# New line before finally
+csharp_new_line_before_finally = true
+
+# 匿名型別成員前換行
+# New line before members in anonymous types
+csharp_new_line_before_members_in_anonymous_types = true
+
+# 物件初始化器成員前換行
+# New line before members in object initializers
+csharp_new_line_before_members_in_object_initializers = true
+
+# 所有左大括號前換行（Allman 風格）
+# New line before all open braces (Allman style)
+csharp_new_line_before_open_brace = all
+
+# LINQ 查詢表達式子句間換行
+# New line between query expression clauses
+csharp_new_line_between_query_expression_clauses = true
+
+#### 縮排偏好設定 ####
+#### Indentation preferences ####
+
+# 縮排區塊內容
+# Indent block contents
+csharp_indent_block_contents = true
+
+# 不縮排大括號
+# Do not indent braces
+csharp_indent_braces = false
+
+# 縮排 case 內容
+# Indent case contents
+csharp_indent_case_contents = true
+
+# case 區塊使用大括號時也縮排
+# Indent case contents when block
+csharp_indent_case_contents_when_block = true
+
+# 標籤縮排比當前少一層
+# Indent labels one less than current
+csharp_indent_labels = one_less_than_current
+
+# 縮排 switch 標籤
+# Indent switch labels
+csharp_indent_switch_labels = true
+
+#### 空格偏好設定 ####
+#### Space preferences ####
+
+# 轉型後不加空格（如 (int)x）
+# No space after cast (e.g., (int)x)
+csharp_space_after_cast = false
+
+# 繼承子句冒號後加空格
+# Space after colon in inheritance clause
+csharp_space_after_colon_in_inheritance_clause = true
+
+# 逗號後加空格
+# Space after comma
+csharp_space_after_comma = true
+
+# 點號後不加空格
+# No space after dot
+csharp_space_after_dot = false
+
+# 控制流程關鍵字後加空格（如 if (...)）
+# Space after keywords in control flow statements (e.g., if (...))
+csharp_space_after_keywords_in_control_flow_statements = true
+
+# for 陳述式分號後加空格
+# Space after semicolon in for statement
+csharp_space_after_semicolon_in_for_statement = true
+
+# 二元運算子前後加空格（如 x + y）
+# Space around binary operators (e.g., x + y)
+csharp_space_around_binary_operators = before_and_after
+
+# 宣告陳述式周圍不加空格
+# No space around declaration statements
+csharp_space_around_declaration_statements = false
+
+# 繼承子句冒號前加空格
+# Space before colon in inheritance clause
+csharp_space_before_colon_in_inheritance_clause = true
+
+# 逗號前不加空格
+# No space before comma
+csharp_space_before_comma = false
+
+# 點號前不加空格
+# No space before dot
+csharp_space_before_dot = false
+
+# 左方括號前不加空格
+# No space before open square brackets
+csharp_space_before_open_square_brackets = false
+
+# for 陳述式分號前不加空格
+# No space before semicolon in for statement
+csharp_space_before_semicolon_in_for_statement = false
+
+# 空方括號間不加空格
+# No space between empty square brackets
+csharp_space_between_empty_square_brackets = false
+
+# 方法呼叫空參數列表括號間不加空格
+# No space between method call empty parameter list parentheses
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+
+# 方法呼叫名稱與左括號間不加空格
+# No space between method call name and opening parenthesis
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+
+# 方法呼叫參數列表括號間不加空格
+# No space between method call parameter list parentheses
+csharp_space_between_method_call_parameter_list_parentheses = false
+
+# 方法宣告空參數列表括號間不加空格
+# No space between method declaration empty parameter list parentheses
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+
+# 方法宣告名稱與左括號間不加空格
+# No space between method declaration name and open parenthesis
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+
+# 方法宣告參數列表括號間不加空格
+# No space between method declaration parameter list parentheses
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+
+# 括號間不加空格
+# No space between parentheses
+csharp_space_between_parentheses = false
+
+# 方括號間不加空格
+# No space between square brackets
+csharp_space_between_square_brackets = false
+
+#### 換行偏好設定 ####
+#### Wrapping preferences ####
+
+# 保留單行區塊
+# Preserve single-line blocks
+csharp_preserve_single_line_blocks = true
+
+# 保留單行陳述式
+# Preserve single-line statements
+csharp_preserve_single_line_statements = true
+
+################################################################################
+#### 命名樣式 - EC226 專案命名規範 ####
+#### Naming Styles - EC226 Project Naming Conventions ####
+################################################################################
+
+#### 命名規則 ####
+#### Naming Rules ####
+
+# ✅ 規則 1: 介面必須以 I 開頭
+# ✅ Rule 1: Interfaces must begin with I
+# 範例: IPaymentService, ICartService, IProductRepository
+# Examples: IPaymentService, ICartService, IProductRepository
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
+
+# ✅ 規則 2: 類型使用 PascalCase
+# ✅ Rule 2: Types use PascalCase
+# 範例: PaymentConfiguration, CartService, ProductVM
+# Examples: PaymentConfiguration, CartService, ProductVM
+dotnet_naming_rule.types_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
+
+# ✅ 規則 3: 非欄位成員使用 PascalCase
+# ✅ Rule 3: Non-field members use PascalCase
+# 範例: GetProducts(), TotalAmount, OrderCreated
+# Examples: GetProducts(), TotalAmount, OrderCreated
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
+dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
+
+# ✅ 規則 4: 私有或內部欄位必須以 _ 開頭
+# ✅ Rule 4: Private or internal fields must begin with _
+# 範例: _unitOfWork, _context, _configuration
+# Examples: _unitOfWork, _context, _configuration
+dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore.severity = suggestion
+dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore.symbols = private_or_internal_field
+dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore.style = begins_with_underscore
+
+# ✅ 規則 5: 非同步方法必須以 Async 結尾
+# ✅ Rule 5: Async methods must end with Async
+# 範例: CheckOutAsync(), GetProductsAsync(), SaveOrderAsync()
+# Examples: CheckOutAsync(), GetProductsAsync(), SaveOrderAsync()
+dotnet_naming_rule.async_method_should_be_ends_with_async.severity = suggestion
+dotnet_naming_rule.async_method_should_be_ends_with_async.symbols = async_method
+dotnet_naming_rule.async_method_should_be_ends_with_async.style = ends_with_async
+
+#### 符號規範 ####
+#### Symbol Specifications ####
+
+# 介面符號定義
+# Interface symbol definition
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.interface.required_modifiers = 
+
+# 私有或內部欄位符號定義
+# Private or internal field symbol definition
+dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
+dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.private_or_internal_field.required_modifiers = 
+
+# 類型符號定義（類別、結構、介面、列舉）
+# Types symbol definition (class, struct, interface, enum)
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
+dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.types.required_modifiers = 
+
+# 非欄位成員符號定義（屬性、事件、方法）
+# Non-field members symbol definition (property, event, method)
+dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
+dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.non_field_members.required_modifiers = 
+
+# 非同步方法符號定義
+# Async method symbol definition
+dotnet_naming_symbols.async_method.applicable_kinds = method
+dotnet_naming_symbols.async_method.applicable_accessibilities = *
+dotnet_naming_symbols.async_method.required_modifiers = async
+
+#### 命名樣式定義 ####
+#### Naming Style Definitions ####
+
+# ✅ I 前綴樣式（用於介面）
+# ✅ I prefix style (for interfaces)
+# 格式: IPascalCase
+# Format: IPascalCase
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.required_suffix = 
+dotnet_naming_style.begins_with_i.word_separator = 
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+# PascalCase 樣式（用於類型和公開成員）
+# PascalCase style (for types and public members)
+# 格式: PascalCase
+# Format: PascalCase
+dotnet_naming_style.pascal_case.required_prefix = 
+dotnet_naming_style.pascal_case.required_suffix = 
+dotnet_naming_style.pascal_case.word_separator = 
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+# ✅ _ 底線前綴樣式（用於私有欄位）
+# ✅ _ underscore prefix style (for private fields)
+# 格式: _camelCase
+# Format: _camelCase
+dotnet_naming_style.begins_with_underscore.required_prefix = _
+dotnet_naming_style.begins_with_underscore.required_suffix = 
+dotnet_naming_style.begins_with_underscore.word_separator = 
+dotnet_naming_style.begins_with_underscore.capitalization = camel_case
+
+# ✅ Async 後綴樣式（用於非同步方法）
+# ✅ Async suffix style (for async methods)
+# 格式: PascalCaseAsync
+# Format: PascalCaseAsync
+dotnet_naming_style.ends_with_async.required_prefix = 
+dotnet_naming_style.ends_with_async.required_suffix = Async
+dotnet_naming_style.ends_with_async.word_separator = 
+dotnet_naming_style.ends_with_async.capitalization = pascal_case
+
+################################################################################
+#### EC226 專案命名規範快速參考 ####
+#### EC226 Project Naming Conventions Quick Reference ####
+################################################################################
+#
+# ✅ 介面 (Interfaces):          IPaymentService, IProductRepository
+# ✅ 類別 (Classes):             PaymentConfiguration, CartService
+# ✅ 結構 (Structs):             ProductData, OrderInfo
+# ✅ 列舉 (Enums):               PaymentMethod, OrderStatus
+# ✅ 公開屬性 (Public Props):    MerchantTradeNo, TotalAmount
+# ✅ 公開方法 (Public Methods):  GenerateTradeNo(), GetProducts()
+# ✅ 私有欄位 (Private Fields):  _unitOfWork, _context, _configuration
+# ✅ 非同步方法 (Async Methods): CheckOutAsync(), GetDataAsync()
+# ✅ 參數 (Parameters):          merchantId, orderNo, items
+# ✅ 區域變數 (Local Vars):      var result, var orderNo, var products
+# ✅ ViewModel:                  ProductVM, CheckCartResultVM
+#
+################################################################################

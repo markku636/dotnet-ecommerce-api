@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
+    <PackageReference Include="sqlSugarCore" Version="5.1.4.153" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FromBody\Payment\" />
+    <Folder Include="ViewModels\Cart\" />
+    <Folder Include="ViewModels\DTO\" />
+    <Folder Include="ViewModels\Member\" />
+    <Folder Include="ViewModels\Order\" />
+    <Folder Include="ViewModels\Support\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EC226.Payment\EC226.Payment.csproj" />
+  </ItemGroup>
+</Project>

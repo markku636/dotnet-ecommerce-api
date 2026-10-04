@@ -1,0 +1,17 @@
+<Project>
+  <ItemGroup>
+    <!-- Override vulnerable transitive dependencies with patched versions -->
+    
+    <!-- BouncyCastle.Cryptography: Fix GHSA-8xfc-gm6g-vgpv, GHSA-v435-xc8x-wvr9, GHSA-m44j-cfrm-g8qc -->
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
+    
+    <!-- Npgsql: Fix GHSA-x9vc-6hfv-hg8c (High severity) -->
+    <PackageReference Include="Npgsql" Version="10.0.1" />
+    
+    <!-- System.IdentityModel.Tokens.Jwt: Fix GHSA-59j7-ghrg-fj52 -->
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    
+    <!-- Microsoft.IdentityModel.JsonWebTokens: Fix GHSA-59j7-ghrg-fj52 -->
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.15.0" />
+  </ItemGroup>
+</Project>

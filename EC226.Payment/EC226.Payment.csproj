@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Version>1.2.1</Version>
+        <Authors>Jerry Chen</Authors>
+        <PackageDescription>使用 Fluent Interface 的風格設計，用來產生綠界金流的交易訂單，設定起來簡單、直覺又方便！</PackageDescription>
+        <RepositoryUrl>https://github.com/cjyuzzi/FluentEcpay</RepositoryUrl>
+        <PackageIconUrl>https://image.flaticon.com/icons/png/512/925/925661.png</PackageIconUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
+    </ItemGroup>
+</Project>

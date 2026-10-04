@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.3.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EC226.CMS.Api\EC226.CMS.Api.csproj" />
+    <ProjectReference Include="..\EC226.Auth\EC226.Auth.csproj" />
+    <ProjectReference Include="..\EC226.Caching\EC226.Caching.csproj" />
+    <ProjectReference Include="..\EC226.CodeGenerator\EC226.CodeGenerator.csproj" />
+    <ProjectReference Include="..\EC226.Configuration\EC226.Configuration.csproj" />
+    <ProjectReference Include="..\EC226.Core\EC226.Core.csproj" />
+    <ProjectReference Include="..\EC226.Filter\EC226.Filter.csproj" />
+    <ProjectReference Include="..\EC226.Loging\EC226.Loging.csproj" />
+    <ProjectReference Include="..\EC226.Mapping\EC226.Mapping.csproj" />
+    <ProjectReference Include="..\EC226.Middlewares\EC226.Middlewares.csproj" />
+    <ProjectReference Include="..\EC226.RedisMQ\EC226.RedisMQ.csproj" />
+    <ProjectReference Include="..\EC226.Swagger\EC226.Swagger.csproj" />
+    <ProjectReference Include="..\EC226.Task\EC226.Task.csproj" />
+    <ProjectReference Include="..\EC226.Utility\EC226.Utility.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.Api\EC226.MemberSite.Api.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.IRepository\EC226.MemberSite.IRepository.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.IServices\EC226.MemberSite.IServices.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.Model\EC226.MemberSite.Model.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.Repository\EC226.MemberSite.Repository.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.Services\EC226.MemberSite.Services.csproj" />
+  </ItemGroup>
+
+</Project>

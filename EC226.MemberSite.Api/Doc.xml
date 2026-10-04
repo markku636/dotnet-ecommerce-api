@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EC226.MemberSite.Api</name>
+    </assembly>
+    <members>
+        <member name="T:EC226.MemberSite.Api.Attributes.StateAttribute">
+            <summary>
+            狀態Attrubute
+            </summary>
+        </member>
+        <member name="F:EC226.MemberSite.Api.Attributes.StateAttribute.AllowStateTransfertTypes">
+            <summary>
+            允許移轉的狀態值
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Attributes.StateAttribute.#ctor(System.Int32[])">
+            <summary>
+            建構子
+            </summary>
+            <param name="values">允許的狀態值</param>
+        </member>
+        <member name="T:EC226.MemberSite.Api.Controllers.CodeGeneratorController">
+            <summary>
+            代碼資料庫器
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.CodeGeneratorController.#ctor(EC226.MemberSite.IServices.ICodeGeneratorServices,AutoMapper.IMapper,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            構造函數
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.CodeGeneratorController.GetTables">
+            <summary>
+            取得資料表列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.CodeGeneratorController.CodeGen(System.String,System.String)">
+            <summary>
+            執行程式產生器
+            </summary>
+            <param name="tableName">AllTable</param>
+            <param name="fileType">AllFiles、EntityFiles、ServicesFiles、InterFaceFiles</param>
+            <returns></returns>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.CodeGeneratorController.GetDataBaseTablesToExcel">
+            <summary>
+            取得所有表和表名並資料庫excel
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EC226.MemberSite.Api.Controllers.PaymentController">
+            <summary>
+            金流控制器
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.GetPaymentOptions">
+            <summary>
+            取得付款選項列表
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.ECPayNotify">
+            <summary>
+            綠界金流 - 付款完成通知 (Server POST)
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.ECPayLogisticsNotify">
+            <summary>
+            綠界物流 - 物流狀態通知
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.NewebpayNotify">
+            <summary>
+            藍新金流 - 付款完成通知 (Server POST)
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.NewebpayCustomer">
+            <summary>
+            藍新金流 - 取號完成通知 (超商代碼/ATM)
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.EcpayNotify_Legacy">
+            <summary>
+            [已棄用] 請改用 /payment/ecpay/notify
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.ECPayLogisticsNotify_Legacy">
+            <summary>
+            [已棄用] 請改用 /payment/ecpay/logistics/notify
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.NewebpayNotify_Legacy">
+            <summary>
+            [已棄用] 請改用 /payment/newebpay/notify
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.PaymentController.NewebpayCustomer_Legacy(EC226.Payment.PaymentResult,EC226.Payment.Enums.PaymentType)">
+            <summary>
+            [已棄用] 請改用 /payment/newebpay/customer
+            </summary>
+        </member>
+        <member name="M:EC226.MemberSite.Api.Controllers.TestController.Ping">
+            <summary>
+            測試Ping
+            </summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>

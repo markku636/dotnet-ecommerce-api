@@ -1,0 +1,40 @@
+﻿<div id="congratulations">
+   <div>
+      Herzlichen Glückwunsch! Ihre Bestellung wurde erfolgreich ausgeführt.
+   </div>
+   <div>
+      <div>
+         YourShop Computer Bestellbestätigung
+      </div>
+      <div>
+         <p>Sehr geehrte(r) Frau/ Herr {0},</p>
+         <p>
+            Vielen Dank für Ihre Bestellung bei YourShop Computer. Wir freuen uns sehr, Sie als unseren Kunden begrüßen zu dürfen.
+            Ihre Bestellinformationen können Sie weiter unten einsehen. Bitte drucken Sie die Rechnung mit Ihrem Drucker und bewahren Sie diese auf.
+            Falls Sie Ihre Bestellung nicht online auf der Bestellstatusseite innerhalb der nächsten 24 Stunden auffinden können,
+            bitte kontaktieren Sie uns per Mail: sales@example.com oder Telefonisch unter: 000 000 000 und
+            faxen Sie uns Ihre ausgedruckte Rechnung an die Faxnummer: 000 000 000
+         </p>
+      </div>
+      <table>
+         <tbody>
+            <tr>
+               <td>Auftragsbestätigungsnummer:</td>
+               <td>IBP-{1}</td>
+               <td rowspan="3">
+                  Um Ihre Bestellung zu verfolgen oder anzusehen, gehen Sie auf
+                  <input type="button" onclick="$.ibuy.redirectTo('/Login/Account')" value="Mein Konto" class="btn btn-danger">
+               </td>
+            </tr>
+            <tr>
+               <td>Auftragsnummer:</td>
+               <td>{1}</td>
+            </tr>
+            <tr>
+               <td>Auftragsdatum:</td>
+               <td>{2}</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+</div>

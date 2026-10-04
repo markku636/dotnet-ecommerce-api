@@ -1,0 +1,474 @@
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using EC226.Configuration;
+using EC226.MemberSite.Model.Entities;
+using EC226.MemberSite.Model.Entities.Expression;
+using EC226.MemberSite.Model.FromBody;
+using EC226.MemberSite.IServices;
+using EC226.MemberSite.Model.ViewModels.UI;
+using EC226.Filter;
+using EC226.Loging;
+using EC226.Utility.Helper;
+using EC226.Utility.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using NPOI.HSSF.UserModel;
+using SqlSugar;
+using EC226.MemberSite.Model.ViewModels.Basics;
+
+namespace EC226.MemberSite.Api.Controllers
+{
+    /// <summary>
+    /// {{ModelDescription}}
+    ///</summary>
+    [Description("{{ModelDescription}}")]
+    [Route("api/[controller]/[action]")]
+    [ApiController]    
+    // [Authorize]
+    public class {{ModelClassName}}Controller : ControllerBase
+    {
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly I{{ModelClassName}}Services _{{ModelClassName}}Services;
+
+        /// <summary>
+        /// 建構函式
+        ///</summary>
+        public {{ModelClassName}}Controller(IWebHostEnvironment webHostEnvironment
+            ,I{{ModelClassName}}Services {{ModelClassName}}Services
+            )
+        {
+            _webHostEnvironment = webHostEnvironment;
+            _{{ModelClassName}}Services = {{ModelClassName}}Services;
+        }
+
+        #region 取得分頁列表============================================================
+        // POST: Api/{{ModelClassName}}/GetPageList
+         /// <summary>
+        /// 取得分頁列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Description("取得分頁列表")]
+        public async Task<Result<PageList<{{ModelClassName}}>>> GetPageList()
+        {
+            var result = new Result<PageList<{{ModelClassName}}>>();
+            var pageCurrent = Request.Query["page"].FirstOrDefault().ObjectToInt(1);
+            var pageSize = Request.Query["limit"].FirstOrDefault().ObjectToInt(30);
+            var where = PredicateBuilder.True<{{ModelClassName}}>();
+            //取得排序欄位
+            var orderField = Request.Query["orderField"].FirstOrDefault();
+
+            Expression<Func<{{ModelClassName}}, object>> orderEx = orderField switch
+            {
+                {% for field in ModelFields %}"{{field.DbColumnName}}" => p => p.{{field.DbColumnName}},{% endfor %}
+                _ => p => p.{{PrimaryKey}}
+            };
+
+            //設定排序方式
+            var orderDirection = Request.Query["orderDirection"].FirstOrDefault();
+            var orderBy = orderDirection switch
+            {
+                "asc" => OrderByType.Asc,
+                "desc" => OrderByType.Desc,
+                _ => OrderByType.Desc
+            };
+            //查詢篩選
+			{% for field in ModelFields %}{% if field.DataType == 'nvarchar' %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Query["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}))
+            {
+                where = where.And(p => p.{{field.DbColumnName}}.Contains({{field.DbColumnName}}));
+            }{% elsif  field.DataType == 'int'  or field.DataType == 'bigint'  %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Query["{{field.DbColumnName}}"].FirstOrDefault().ObjectToInt(0);
+            if ({{field.DbColumnName}} > 0)
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == {{field.DbColumnName}});
+            }{% elsif  field.DataType == 'decimal'  %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Query["{{field.DbColumnName}}"].FirstOrDefault().ObjectToDecimal(0);
+            if ({{field.DbColumnName}} > 0)
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == {{field.DbColumnName}});
+            }{% elsif  field.DataType == 'datetime' %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Query["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}))
+            {
+                if ({{field.DbColumnName}}.Contains("到"))
+                {
+                    var dts = {{field.DbColumnName}}.Split("到");
+                    var dtStart = dts[0].Trim().ObjectToDate();
+                    where = where.And(p => p.{{field.DbColumnName}} > dtStart);
+                    var dtEnd = dts[1].Trim().ObjectToDate();
+                    where = where.And(p => p.{{field.DbColumnName}} < dtEnd);
+                }
+                else
+                {
+                    var dt = {{field.DbColumnName}}.ObjectToDate();
+                    where = where.And(p => p.{{field.DbColumnName}} > dt);
+                }
+            }{% elsif  field.DataType == 'bit' %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Query["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}) && {{field.DbColumnName}}.ToLowerInvariant() == "true")
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == true);
+            }
+            else if (!string.IsNullOrEmpty({{field.DbColumnName}}) && {{field.DbColumnName}}.ToLowerInvariant() == "false")
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == false);
+            }{% else %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Query["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}))
+            {
+                where = where.And(p => p.{{field.DbColumnName}}.Contains({{field.DbColumnName}}));
+            }{% endif %}{% endfor %}
+            //取得數據
+            var list = await _{{ModelClassName}}Services.QueryPageAsync(where, orderEx, orderBy, pageCurrent, pageSize, true);
+            //返回數據
+            result.Data = list;
+            
+            result.Count = list.TotalCount;
+            
+            return result;
+        }
+        #endregion
+
+        #region 新增============================================================
+        // POST: Api/{{ModelClassName}}/DoCreate
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("新增")]
+        public async Task<Result> DoCreate([FromBody]{{ModelClassName}} entity)
+        {
+            var result = await _{{ModelClassName}}Services.InsertAsync(entity);
+            return result;
+        }
+        #endregion
+
+        #region 修改============================================================
+        // POST: Api/{{ModelClassName}}/GetEdit
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("修改")]
+        public async Task<Result<{{ModelClassName}}>> GetEdit([FromBody]FMIntId entity)
+        {
+            var result = new Result<{{ModelClassName}}>();
+
+            var model = await _{{ModelClassName}}Services.QueryByIdAsync(entity.id, false);
+            if (model == null)
+            {
+                result.Fail("不存在此資訊");
+                return result;
+            }
+            
+            result.Data = model;
+
+            return result;
+        }
+        #endregion
+
+        #region 編輯提交============================================================
+        // POST: Api/{{ModelClassName}}/Edit
+        /// <summary>
+        /// 編輯提交
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("編輯提交")]
+        public async Task<Result> DoEdit([FromBody]{{ModelClassName}} entity)
+        {
+            var result = await _{{ModelClassName}}Services.UpdateAsync(entity);
+            return result;
+        }
+        #endregion
+
+        #region 刪除數據============================================================
+        // POST: Api/{{ModelClassName}}/DoDelete/10
+        /// <summary>
+        /// 刪除ByID
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("刪除ByID")]
+        public async Task<Result> DoDelete([FromBody]FMIntId entity)
+        {
+            var result = new Result();
+
+            var model = await _{{ModelClassName}}Services.ExistsAsync(p => p.{{PrimaryKey}} == entity.id, true);
+            if (!model)
+            {
+                result.Fail(GlobalConstVars.DataisNo);
+				   return result;
+            }
+            result = await _{{ModelClassName}}Services.DeleteByIdAsync(entity.id);
+
+            return result;
+        }
+        #endregion
+
+        #region 批次刪除============================================================
+        // POST: Api/{{ModelClassName}}/DoBatchDelete/10,11,20
+        /// <summary>
+        /// 批次刪除
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("批次刪除")]
+        public async Task<Result> DoBatchDelete([FromBody]FMArrayIntIds entity)
+        {
+            var result = await _{{ModelClassName}}Services.DeleteByIdsAsync(entity.id);
+            return result;
+        }
+
+        #endregion
+
+        #region 查詢詳情============================================================
+        // POST: Api/{{ModelClassName}}/GetDetails/10
+        /// <summary>
+        /// 查詢詳情
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("查詢詳情")]
+        public async Task<Result<{{ModelClassName}}>> GetDetails([FromBody]FMIntId entity)
+        {
+            var result = new Result<{{ModelClassName}}>();
+
+            var model = await _{{ModelClassName}}Services.QueryByIdAsync(entity.id, false);
+            if (model == null)
+            {
+                result.Fail("不存在此資訊");
+                return result;
+            }
+            
+            result.Data = model;
+
+            return result;
+        }
+        #endregion
+
+        #region 選擇資料庫============================================================
+        // POST: Api/{{ModelClassName}}/SelectExportExcel/10
+        /// <summary>
+        /// 選擇資料庫
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("選擇資料庫")]
+        public async Task<Result> SelectExportExcel([FromBody]FMArrayIntIds entity)
+        {
+            var result = new Result();
+
+            //建立Excel檔案的對象
+            var book = new HSSFWorkbook();
+            //新增一個sheet
+            var mySheet = book.CreateSheet("Sheet1");
+            //取得list數據
+            var listModel = await _{{ModelClassName}}Services.QueryListByClauseAsync(p => entity.id.Contains(p.{{PrimaryKey}}), p => p.{{PrimaryKey}}, OrderByType.Asc, true);
+            //給sheet1新增第一行的頭部標題
+            var headerRow = mySheet.CreateRow(0);
+            var headerStyle = ExcelHelper.GetHeaderStyle(book);
+{% for field in ModelFields %}
+            var cell{{ forloop.index0  }} = headerRow.CreateCell({{ forloop.index0  }});
+            cell{{ forloop.index0  }}.SetCellValue("{{field.ColumnDescription}}");
+            cell{{ forloop.index0  }}.CellStyle = headerStyle;
+            mySheet.SetColumnWidth({{ forloop.index0  }}, 10 * 256);
+{% endfor %}
+            headerRow.Height = 30 * 20;
+            var commonCellStyle = ExcelHelper.GetCommonStyle(book);
+
+            //將數據逐步寫入sheet1各個行
+            for (var i = 0; i < listModel.Count; i++)
+            {
+                var rowTemp = mySheet.CreateRow(i + 1);
+{% for field in ModelFields %}
+                    var rowTemp{{ forloop.index0  }} = rowTemp.CreateCell({{ forloop.index0  }});
+                        rowTemp{{ forloop.index0  }}.SetCellValue(listModel[i].{{field.DbColumnName}}.ToString());
+                        rowTemp{{ forloop.index0  }}.CellStyle = commonCellStyle;
+{% endfor %}
+            }
+            // 資料庫excel
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string tpath = "/files/" + DateTime.Now.ToString("yyyy-MM-dd") + "/";
+            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "-{{ModelClassName}}資料庫(選擇結果).xls";
+            string filePath = webRootPath + tpath;
+            DirectoryInfo di = new DirectoryInfo(filePath);
+            if (!di.Exists)
+            {
+                di.Create();
+            }
+            FileStream fileHssf = new FileStream(filePath + fileName, FileMode.Create);
+            book.Write(fileHssf);
+            fileHssf.Close();
+
+            
+            result.Success(GlobalConstVars.ExcelExportSuccess);
+            result.Data = tpath + fileName;
+
+            return result;
+        }
+        #endregion
+
+        #region 查詢資料庫============================================================
+        // POST: Api/{{ModelClassName}}/QueryExportExcel/10
+        /// <summary>
+        /// 查詢資料庫
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("查詢資料庫")]
+        public async Task<Result> QueryExportExcel()
+        {
+            var result = new Result();
+
+            var where = PredicateBuilder.True<{{ModelClassName}}>();
+                //查詢篩選
+			{% for field in ModelFields %}{% if field.DataType == 'nvarchar' %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Form["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}))
+            {
+                where = where.And(p => p.{{field.DbColumnName}}.Contains({{field.DbColumnName}}));
+            }{% elsif  field.DataType == 'int' or field.DataType == 'bigint'  %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Form["{{field.DbColumnName}}"].FirstOrDefault().ObjectToInt(0);
+            if ({{field.DbColumnName}} > 0)
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == {{field.DbColumnName}});
+            }{% elsif  field.DataType == 'decimal'  %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Form["{{field.DbColumnName}}"].FirstOrDefault().ObjectToDecimal(0);
+            if ({{field.DbColumnName}} > 0)
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == {{field.DbColumnName}});
+            }{% elsif  field.DataType == 'datetime' %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Form["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}))
+            {
+                var dt = {{field.DbColumnName}}.ObjectToDate();
+                where = where.And(p => p.{{field.DbColumnName}} > dt);
+            }{% elsif  field.DataType == 'bit' %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Form["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}) && {{field.DbColumnName}}.ToLowerInvariant() == "true")
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == true);
+            }
+            else if (!string.IsNullOrEmpty({{field.DbColumnName}}) && {{field.DbColumnName}}.ToLowerInvariant() == "false")
+            {
+                where = where.And(p => p.{{field.DbColumnName}} == false);
+            }{% else %}
+			//{{field.ColumnDescription}} {{field.DataType}}
+			var {{field.DbColumnName}} = Request.Form["{{field.DbColumnName}}"].FirstOrDefault();
+            if (!string.IsNullOrEmpty({{field.DbColumnName}}))
+            {
+                where = where.And(p => p.{{field.DbColumnName}}.Contains({{field.DbColumnName}}));
+            }{% endif %}{% endfor %}
+            //取得數據
+            //建立Excel檔案的對象
+            var book = new HSSFWorkbook();
+            //新增一個sheet
+            var mySheet = book.CreateSheet("Sheet1");
+            //取得list數據
+            var listModel = await _{{ModelClassName}}Services.QueryListByClauseAsync(where, p => p.{{PrimaryKey}}, OrderByType.Asc, true);
+            //給sheet1新增第一行的頭部標題
+                var headerRow = mySheet.CreateRow(0);
+            var headerStyle = ExcelHelper.GetHeaderStyle(book);
+            {% for field in ModelFields %}
+            var cell{{ forloop.index0  }} = headerRow.CreateCell({{ forloop.index0  }});
+            cell{{ forloop.index0  }}.SetCellValue("{{field.ColumnDescription}}");
+            cell{{ forloop.index0  }}.CellStyle = headerStyle;
+            mySheet.SetColumnWidth({{ forloop.index0  }}, 10 * 256);
+			{% endfor %}
+
+            headerRow.Height = 30 * 20;
+            var commonCellStyle = ExcelHelper.GetCommonStyle(book);
+
+            //將數據逐步寫入sheet1各個行
+            for (var i = 0; i < listModel.Count; i++)
+            {
+                var rowTemp = mySheet.CreateRow(i + 1);
+{% for field in ModelFields %}
+
+            var rowTemp{{ forloop.index0  }} = rowTemp.CreateCell({{ forloop.index0  }});
+            rowTemp{{ forloop.index0  }}.SetCellValue(listModel[i].{{field.DbColumnName}}.ToString());
+            rowTemp{{ forloop.index0  }}.CellStyle = commonCellStyle;
+
+{% endfor %}
+            }
+            // 寫入到excel
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string tpath = "/files/" + DateTime.Now.ToString("yyyy-MM-dd") + "/";
+            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "-{{ModelClassName}}資料庫(查詢結果).xls";
+            string filePath = webRootPath + tpath;
+            DirectoryInfo di = new DirectoryInfo(filePath);
+            if (!di.Exists)
+            {
+                di.Create();
+            }
+            FileStream fileHssf = new FileStream(filePath + fileName, FileMode.Create);
+            book.Write(fileHssf);
+            fileHssf.Close();
+
+            
+            result.Success(GlobalConstVars.ExcelExportSuccess);
+            result.Data = tpath + fileName;
+
+            return result;
+        }
+        #endregion
+
+        {% for field in ModelFields %}{% if  field.DataType == 'bit' %}
+        #region 設定{{field.ColumnDescription}}============================================================
+        // POST: Api/{{ModelClassName}}/DoSet{{field.DbColumnName}}/10
+        /// <summary>
+        /// 設定{{field.ColumnDescription}}
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Description("設定{{field.ColumnDescription}}")]
+        public async Task<Result> DoSet{{field.DbColumnName}}([FromBody]FMUpdateBoolDataByIntId entity)
+        {
+            var result = new Result();
+
+            var oldModel = await _{{ModelClassName}}Services.QueryByIdAsync(entity.id, false);
+            if (oldModel == null)
+            {
+                result.Fail("不存在此資訊");
+                return result;
+            }
+            oldModel.{{field.DbColumnName}} = (bool)entity.data;
+
+            var isSuccess = await _{{ModelClassName}}Services.UpdateAsync(p => new {{ModelClassName}}() { {{field.DbColumnName}} = oldModel.{{field.DbColumnName}} }, p => p.{{PrimaryKey}} == oldModel.{{PrimaryKey}});                      
+
+            return result;
+		}
+        #endregion
+        {% endif %}{% endfor %}
+
+    }
+}

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EC226.Auth\EC226.Auth.csproj" />
+    <ProjectReference Include="..\EC226.Configuration\EC226.Configuration.csproj" />
+    <ProjectReference Include="..\EC226.Core\EC226.Core.csproj" />
+    <ProjectReference Include="..\EC226.MemberSite.IServices\EC226.MemberSite.IServices.csproj" />
+    <ProjectReference Include="..\EC226.Loging\EC226.Loging.csproj" />
+    <ProjectReference Include="..\EC226.Utility\EC226.Utility.csproj" />
+  </ItemGroup>
+</Project>
